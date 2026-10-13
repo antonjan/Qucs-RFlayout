@@ -173,3 +173,11 @@ Work in progress... thomas.lepoix@protonmail.ch
 
 An optional C++ MCP server exposes layout conversion to local MCP clients.
 See [build instructions, client configuration, and tool arguments](doc/mcp.md).
+## to run Octive simulation run
+
+    octave --no-gui simulation.m --no-gui --batch
+
+the results will be in 
+
+    ~/qusc-rflayout/designs/ro4350b_lpf_10ghz/openems/simulation_result
+
