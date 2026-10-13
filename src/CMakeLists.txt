@@ -1,14 +1,4 @@
-
-configure_file(
-	"${CMAKE_CURRENT_SOURCE_DIR}/changelog.hpp.in"
-	"${CMAKE_CURRENT_BINARY_DIR}/generated/changelog.hpp"
-	@ONLY
-	)
-
-add_executable( ${PROJECT_NAME} WIN32 )
-
-target_sources( ${PROJECT_NAME}
-	PRIVATE
+set( QRFL_CORE_SOURCES
 	"${CMAKE_CURRENT_SOURCE_DIR}/logger.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/microstrip/element.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/microstrip/pac.cpp"
@@ -33,6 +23,20 @@ target_sources( ${PROJECT_NAME}
 	"${CMAKE_CURRENT_SOURCE_DIR}/layoutstrings.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/layoutwriter.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/converter.cpp"
+)
+
+
+configure_file(
+	"${CMAKE_CURRENT_SOURCE_DIR}/changelog.hpp.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/generated/changelog.hpp"
+	@ONLY
+	)
+
+add_executable( ${PROJECT_NAME} WIN32 )
+
+target_sources( ${PROJECT_NAME}
+	PRIVATE
+	${QRFL_CORE_SOURCES}
 	"$<$<NOT:$<BOOL:${QRFL_MINIMAL}>>:${CMAKE_CURRENT_SOURCE_DIR}/aboutdialog.cpp>"
 	"$<$<NOT:$<BOOL:${QRFL_MINIMAL}>>:${CMAKE_CURRENT_SOURCE_DIR}/preview.cpp>"
 	"$<$<NOT:$<BOOL:${QRFL_MINIMAL}>>:${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp>"
@@ -123,3 +127,16 @@ install(
 #		)
 #
 #endif( WIN32 )
+
+if( QRFL_BUILD_MCP )
+	find_package( Qt6 REQUIRED COMPONENTS Core )
+	add_library( qrfl_mcp_core STATIC ${QRFL_CORE_SOURCES} )
+	target_compile_definitions( qrfl_mcp_core PRIVATE QRFL_MINIMAL )
+	target_compile_features( qrfl_mcp_core PUBLIC cxx_std_23 )
+	target_include_directories( qrfl_mcp_core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" )
+	add_executable( qucsrflayout-mcp mcp/main.cpp )
+	target_compile_definitions( qucsrflayout-mcp PRIVATE QRFL_VERSION="${PROJECT_VERSION}" )
+	target_link_libraries( qucsrflayout-mcp PRIVATE qrfl_mcp_core Qt6::Core )
+	set_target_properties( qucsrflayout-mcp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" )
+	install( TARGETS qucsrflayout-mcp RUNTIME DESTINATION bin )
+endif()

@@ -38,6 +38,8 @@ include( FixedShell )
 #	set( HOST_LINUX TRUE )
 #endif( ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
 
+option( QRFL_BUILD_MCP "Build the C++ stdio MCP server (requires Qt6 Core)" OFF )
+
 option( QRFL_MINIMAL "Disable GUI support and Qt dependency" OFF )
 message( STATUS "Minimal mode: ${QRFL_MINIMAL}" )
 if( WIN32 AND QRFL_MINIMAL )
@@ -107,6 +109,8 @@ if( NOT QRFL_MINIMAL )
 		Widgets       REQUIRED
 		)
 endif( NOT QRFL_MINIMAL )
+
+enable_testing()
 
 add_subdirectory( "${CMAKE_SOURCE_DIR}/src" )
 add_subdirectory( "${CMAKE_SOURCE_DIR}/doc" )

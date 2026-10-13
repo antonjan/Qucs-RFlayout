@@ -98,3 +98,13 @@ if( CMAKE_BUILD_TYPE MATCHES Coverage )
 		)
 
 endif( CMAKE_BUILD_TYPE MATCHES Coverage )
+
+if( QRFL_BUILD_MCP )
+	find_package( Python3 COMPONENTS Interpreter )
+	if( Python3_Interpreter_FOUND )
+		add_test( NAME MCPIntegration
+			COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/mcp_integration.py"
+			"$<TARGET_FILE:qucsrflayout-mcp>" "${CMAKE_SOURCE_DIR}" )
+		set_tests_properties( MCPIntegration PROPERTIES TIMEOUT 60 )
+	endif()
+endif()

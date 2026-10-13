@@ -168,3 +168,8 @@ qucsrflayout -i qucs-schematic.sch -o output-directory -f .output-format
 <br>
 
 Work in progress... thomas.lepoix@protonmail.ch
+
+## MCP server
+
+An optional C++ MCP server exposes layout conversion to local MCP clients.
+See [build instructions, client configuration, and tool arguments](doc/mcp.md).
