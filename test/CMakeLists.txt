@@ -108,3 +108,22 @@ if( QRFL_BUILD_MCP )
 		set_tests_properties( MCPIntegration PROPERTIES TIMEOUT 60 )
 	endif()
 endif()
+
+if( QRFL_BUILD_MCP AND Python3_Interpreter_FOUND )
+	find_program( QRFL_OCTAVE_EXECUTABLE NAMES octave-cli octave )
+	if( QRFL_OCTAVE_EXECUTABLE )
+		add_test( NAME MCPSimulationIntegration
+			COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/mcp_simulation_integration.py"
+			"$<TARGET_FILE:qucsrflayout-mcp>" "${QRFL_OCTAVE_EXECUTABLE}" )
+		set_tests_properties( MCPSimulationIntegration PROPERTIES TIMEOUT 60 )
+	endif()
+endif()
+
+set( QRFL_OPENEMS_TEST_PREFIX "" CACHE PATH "OpenEMS installation prefix for the optional actual solver MCP smoke test" )
+if( QRFL_BUILD_MCP AND Python3_Interpreter_FOUND AND QRFL_OCTAVE_EXECUTABLE AND QRFL_OPENEMS_TEST_PREFIX )
+	add_test( NAME MCPOpenEMSSmoke
+		COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/mcp_openems_smoke.py"
+		"$<TARGET_FILE:qucsrflayout-mcp>" "${QRFL_OCTAVE_EXECUTABLE}"
+		"${CMAKE_CURRENT_SOURCE_DIR}/octave/openems_smoke.m" "${QRFL_OPENEMS_TEST_PREFIX}" )
+	set_tests_properties( MCPOpenEMSSmoke PROPERTIES TIMEOUT 65 )
+endif()

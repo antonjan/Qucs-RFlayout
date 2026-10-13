@@ -171,7 +171,7 @@ Work in progress... thomas.lepoix@protonmail.ch
 
 ## MCP server
 
-An optional C++ MCP server exposes layout conversion to local MCP clients.
+An optional C++ MCP server exposes layout conversion and background GNU Octave/OpenEMS simulations to local MCP clients.
 See [build instructions, client configuration, and tool arguments](doc/mcp.md).
 ## to run Octive simulation run
 
